@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Objectoriented Programming</title>
+
+        <script>
+            var people = {}
+
+            class Person {
+                constructor(id) {
+                    this.state = {
+                        id: id,
+                        coords: '',
+                        head: 'black',
+                        body: 'black',
+                        arms: 'black',
+                        legs: 'black'
+                    }
+                    this.el_refers = {
+                        field: document.querySelector('#field'),
+                        data: document.querySelector('#data'),
+                        person: null
+                    }
+
+                    this.componentsEl = `
+                        <div class="person" id="person-${this.state.id}">
+                            ${this.state.head && `
+                                <div class="p-components p-head"><h1 style="color: white">${this.state.id}</h1></div>`
+                            }
+                            ${this.state.body && `
+                                <div class="p-components p-body"></div>`
+                            }
+                            ${this.state.head && `
+                                <div class="p-components p-arms">
+                                    <div class="p-arms-left"></div>
+                                    <div class="p-arms-right"></div>    
+                                </div>
+                            `}
+                            ${this.state.legs && `
+                                <div class="p-components p-legs">
+                                    <div class="p-legs-left"></div>
+                                    <div class="p-legs-right"></div>
+                                </div>
+                            `}
+
+                            <div class="person-opacity"></div>
+                        </div>
+                    `;
+
+                    // this.el_refers.field.innerHTML += this.componentsEl; |||     ERROR because += is like = ... + ... AND the elements will be rerendered !
+                    this.el_refers.field.insertAdjacentHTML('beforeend', this.componentsEl);
+
+                    this.el_refers.person = document.querySelector(`#person-${this.state.id}`)
+
+                    this.state.coords = `${this.el_refers.person.offsetLeft}:${this.el_refers.person.offsetTop}`
+
+                    this.el_refers.person.addEventListener('mousedown', () => this.showData());
+
+                    this.el_refers.person.addEventListener('mousedown', a => {
+                        window.onmousemove = e => this.dragPerson(e, a.layerX, a.layerY)
+                        window.onmouseup = () => window.onmousemove = null
+                    })
+                }
+
+                setColor(component, color) {
+                    document.querySelectorAll(`#person-${this.state.id} .p-${component}, #person-${this.state.id} .p-${component} > *`).forEach(e => {
+                        e.style.backgroundColor = color;
+                    })
+
+                    this.state[component] = color;
+                }
+
+                showData() {
+                    this.el_refers.data.innerHTML = `
+                        <h1>${this.state.id}</h1>
+                        <ul>
+                            <li data-comp="coords">coords: (${this.state.coords})</li>                                      <br />
+                            <li data-comp="head">head: <input data-id="${this.state.id}" value="${this.state.head}"></li>   <br />
+                            <li data-comp="body">body: <input data-id="${this.state.id}" value="${this.state.body}"></li>   <br />
+                            <li data-comp="arms">arms: <input data-id="${this.state.id}" value="${this.state.arms}"></li>   <br />
+                            <li data-comp="legs">legs: <input data-id="${this.state.id}" value="${this.state.legs}"></li>
+                        </ul>
+                    `;
+
+                    document.querySelectorAll(`input[data-id="${this.state.id}"]`).forEach(e => e.onchange = a => {
+                        this.setColor(a.target.parentElement.getAttribute("data-comp"), a.target.value)
+                    })
+                }
+
+                dragPerson(e, layerX, layerY) {
+                    let x = e.clientX - layerX;
+                    let y = e.clientY - layerY;
+                    this.el_refers.person.style.left = x + 'px';
+                    this.el_refers.person.style.top = y + 'px';
+
+                    this.state.coords = `${x}:${y}`
+                    this.el_refers.data.querySelector('li[data-comp="coords"]').textContent = `coords: (${this.state.coords})`
+                }
+            }
+        </script>
+        <style>
+            body {
+                display: flex;
+                flex-direction: row;
+
+                position: fixed;
+
+                width: 100%;
+                height: 100%;
+
+                margin: 0;
+
+                font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+            }
+
+            #data-field {
+                background-color: gray;
+                width: 350px;
+            }
+            #data {
+                padding: 20px;
+            }
+
+            #footer {
+                position: absolute;
+                bottom: 15px;
+                padding: 0;
+                margin: 0;
+
+                width: 350px;
+
+                text-align: center;
+
+                color: whitesmoke;
+            }
+
+            #field {
+                width: 75%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .person {
+                cursor: pointer;
+
+                position: fixed;
+                width: 200px;
+                height: 475px;
+                /* background-color: lightblue; */
+            }
+            .person-opacity {
+                position: absolute;
+                padding: 5px;
+                left: -5px;
+                top: -5px;
+
+                width: 100%;
+                height: 100%;
+
+                border-radius: 20px;
+                transition: box-shadow 0.5s;
+
+                z-index: 5;
+            }
+            .person-opacity:active {
+                box-shadow: 0 0 10px;
+            }
+
+            .p-components {
+                background-color: black;
+                border-radius: 10px;
+
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .p-head {
+                top: 0;
+                width: 100px;
+                height: 100px;
+
+                border-radius: 100%;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;    
+            }
+            .p-body {
+                top: 100px;
+                width: 50px;
+                height: 210px;
+
+                z-index: 1;
+            }
+
+            .p-arms > *, .p-legs > * {
+                position: absolute;
+                border-radius: 10px;
+
+                background-color: black;
+            }
+
+            .p-arms {
+                top: 100px;
+                width: 200px;
+                height: 50px;
+
+                z-index: 2;
+            }
+            .p-arms > * {
+                width: 50px;
+                height: 150px;
+            }
+            .p-arms-left {
+                left: 0px;
+            }
+            .p-arms-right {
+                right: 0px;
+            }
+
+
+            .p-legs {
+                top: 300px;
+            }
+            .p-legs > * {
+                height: 175px;
+                width: 50px;
+            }
+
+            .p-legs-left {
+                right: 12.5px;
+                rotate: 25deg;
+            }
+            .p-legs-right {
+                left: 12.5px;
+                rotate: -25deg;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="data-field">
+            <button onclick="createNewPerson()">Create new person</button>
+            <div id="data"></div>
+            <div id="footer">
+                <h3>
+                    von <br>
+                    droneshots heidelberg
+                </h3> <a href="https://droneshots-heidelberg.de/">https://droneshots-heidelberg.de/</a>
+            </div>
+        </div>
+
+        <div id="field"></div>
+
+        <script>
+            function createNewPerson() {
+                let count_people = Object.keys(people).length
+                people[count_people] = new Person(count_people);
+            }
+        </script>
+    </body>
+</html>
