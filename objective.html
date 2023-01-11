@@ -16,6 +16,7 @@
                         arms: 'black',
                         legs: 'black'
                     }
+
                     this.el_refers = {
                         field: document.querySelector('#field'),
                         data: document.querySelector('#data'),
@@ -25,19 +26,19 @@
                     this.componentsEl = `
                         <div class="person" id="person-${this.state.id}">
                             ${this.state.head && `
-                                <div class="p-components p-head"><h1 style="color: white">${this.state.id}</h1></div>`
+                                <div class="p-components p-head" style="background-color='${this.state.head}'"><h1 style="color: white">${this.state.id}</h1></div>`
                             }
                             ${this.state.body && `
-                                <div class="p-components p-body"></div>`
+                                <div class="p-components p-body" style="background-color='${this.state.body}'"></div>`
                             }
                             ${this.state.head && `
-                                <div class="p-components p-arms">
+                                <div class="p-components p-arms" style="background-color='${this.state.arms}'">
                                     <div class="p-arms-left"></div>
                                     <div class="p-arms-right"></div>    
                                 </div>
                             `}
                             ${this.state.legs && `
-                                <div class="p-components p-legs">
+                                <div class="p-components p-legs" style="background-color='${this.state.legs}'">
                                     <div class="p-legs-left"></div>
                                     <div class="p-legs-right"></div>
                                 </div>
@@ -267,8 +268,8 @@
                 people[count_people] = new Person(count_people);
             }
 
-            createNewPerson();
-            people[0].showData();
+            // createNewPerson();
+            // people[0].showData();
         </script>
     </body>
 </html>
