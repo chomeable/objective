@@ -76,14 +76,14 @@
                         <div class="p-head p-num"><h1>${this.state.id}<h1></div>
                         <ul>
                             <li data-comp="coords">coords: (${this.state.coords})</li>                                      <br />
-                            <li data-comp="head">head: <input data-id="${this.state.id}" value="${this.state.head}"></li>   <br />
-                            <li data-comp="body">body: <input data-id="${this.state.id}" value="${this.state.body}"></li>   <br />
-                            <li data-comp="arms">arms: <input data-id="${this.state.id}" value="${this.state.arms}"></li>   <br />
-                            <li data-comp="legs">legs: <input data-id="${this.state.id}" value="${this.state.legs}"></li>
+                            <li data-comp="head">head: <input type="color" data-id="${this.state.id}" value="${this.state.head}"></li>   <br />
+                            <li data-comp="body">body: <input type="color" data-id="${this.state.id}" value="${this.state.body}"></li>   <br />
+                            <li data-comp="arms">arms: <input type="color" data-id="${this.state.id}" value="${this.state.arms}"></li>   <br />
+                            <li data-comp="legs">legs: <input type="color" data-id="${this.state.id}" value="${this.state.legs}"></li>
                         </ul>
                     `;
 
-                    document.querySelectorAll(`input[data-id="${this.state.id}"]`).forEach(e => e.onchange = a => {
+                    document.querySelectorAll(`input[data-id="${this.state.id}"]`).forEach(e => e.oninput = a => {
                         this.setColor(a.target.parentElement.getAttribute("data-comp"), a.target.value)
                     })
                 }
@@ -157,8 +157,8 @@
                 position: fixed;
                 width: 200px;
                 height: 475px;
-                /* background-color: lightblue; */
             }
+
             .person-opacity {
                 position: absolute;
                 padding: 5px;
